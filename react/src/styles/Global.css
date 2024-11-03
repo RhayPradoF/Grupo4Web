@@ -1,0 +1,27 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    box-sizing: border-box;
+    padding: 0 200px;
+    background-image: url('../assets/fundoPizza.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
+#root{
+    width: 100%;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('../assets/fonts/Raleway/Raleway-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: 'Playfair';
+    src: url('../assets/fonts/Playfair/Playfair-VariableFont_opsz,wdth,wght.ttf');
+}
