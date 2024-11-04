@@ -19,6 +19,8 @@ public class Produtos {
 	private Long id;
 
 	private String tamanho;
+	
+	private String descricao;
 
 	private String sabor;
 
