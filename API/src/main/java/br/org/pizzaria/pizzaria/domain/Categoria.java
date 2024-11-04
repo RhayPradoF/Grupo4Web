@@ -9,23 +9,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table
 public class Categoria {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String salgado;
-
-	private String doce;
-
-	private String sobremesa;
-
-	private String bebida;
-
-	private String bebidaAlcoolica;
+	private String nome;
 
 	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
 	private List<Produtos> produtos;
@@ -38,44 +32,12 @@ public class Categoria {
 		this.id = id;
 	}
 
-	public String getSalgado() {
-		return salgado;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setSalgado(String salgado) {
-		this.salgado = salgado;
-	}
-
-	public String getDoce() {
-		return doce;
-	}
-
-	public void setDoce(String doce) {
-		this.doce = doce;
-	}
-
-	public String getSobremesa() {
-		return sobremesa;
-	}
-
-	public void setSobremesa(String sobremesa) {
-		this.sobremesa = sobremesa;
-	}
-
-	public String getBebida() {
-		return bebida;
-	}
-
-	public void setBebida(String bebida) {
-		this.bebida = bebida;
-	}
-
-	public String getBebidaAlcoolica() {
-		return bebidaAlcoolica;
-	}
-
-	public void setBebidaAlcoolica(String bebidaAlcoolica) {
-		this.bebidaAlcoolica = bebidaAlcoolica;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public List<Produtos> getProdutos() {
