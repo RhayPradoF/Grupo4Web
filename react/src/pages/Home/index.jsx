@@ -92,7 +92,6 @@ export default function Home() {
             </DivPrecoProduto>
           </Produto>
         </Categoria>
-        
       </AreaCardapio>
       <Footer />
     </>
