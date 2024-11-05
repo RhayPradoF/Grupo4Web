@@ -5,6 +5,7 @@ import Sobre from '../pages/Sobre'
 import Contatos from '../pages/Contatos'
 import Login from '../pages/Login'
 import Editor from '../pages/Editor'
+import Cadastro from '../pages/Cadastro'
 
 
 export default function AppRoutes() {
@@ -15,6 +16,8 @@ export default function AppRoutes() {
         <Route path='/contatos' element={<Contatos/>}></Route>
         <Route path='/editor' element={<Editor/>}></Route>
         <Route path='/login' element={<Login/>}></Route>
+        <Route path= '/cadastro' element={<Cadastro/>}></Route>
+        
     </Routes>
   )
 }
