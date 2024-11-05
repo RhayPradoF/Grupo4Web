@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/index";
 import Footer from "../../components/Footer/index";
 import {
@@ -23,8 +23,22 @@ import {
   ItemPrecoProduto,
 } from "./Home.style";
 import bannerImage from "../../assets/pizzaBanner.png";
+import axios from "axios";
 
 export default function Home() {
+  const [produtos, setProdutos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/categorias")
+      .then((response) => {
+        console.log("foi");
+        setCategorias(response.data);
+      })
+      .catch(() => console.log("Não foi"));
+  }, []);
+
   return (
     <>
       <Header />
@@ -44,54 +58,28 @@ export default function Home() {
         <DivTituloCardapio>
           <TituloCardapio>Cardápio</TituloCardapio>
         </DivTituloCardapio>
-        <Categoria>
-          <TituloCategoria>Pizzas Salgadas</TituloCategoria>
-          <Produto>
-            <DivNomeProduto>
-              <NomeProduto>
-                <TituloProduto>Marguerita </TituloProduto>- Molho de tomate,
-                mussarela, tomate e manjericão.
-              </NomeProduto>
-            </DivNomeProduto>
-            <DivPrecoProduto>
-              <ListaPrecoProduto>
-                <ItemPrecoProduto>P - R$100,00</ItemPrecoProduto>
-                <ItemPrecoProduto>M - R$100,00</ItemPrecoProduto>
-                <ItemPrecoProduto>G - R$100,00</ItemPrecoProduto>
-              </ListaPrecoProduto>
-            </DivPrecoProduto>
-          </Produto>
-          <Produto>
-            <DivNomeProduto>
-              <NomeProduto>
-                <TituloProduto>Marguerita </TituloProduto>- Molho de tomate,
-                mussarela, tomate e manjericão.
-              </NomeProduto>
-            </DivNomeProduto>
-            <DivPrecoProduto>
-              <ListaPrecoProduto>
-                <ItemPrecoProduto>P - R$100,00</ItemPrecoProduto>
-                <ItemPrecoProduto>M - R$100,00</ItemPrecoProduto>
-                <ItemPrecoProduto>G - R$100,00</ItemPrecoProduto>
-              </ListaPrecoProduto>
-            </DivPrecoProduto>
-          </Produto>
-          <Produto>
-            <DivNomeProduto>
-              <NomeProduto>
-                <TituloProduto>Marguerita </TituloProduto>- Molho de tomate,
-                mussarela, tomate e manjericão.
-              </NomeProduto>
-            </DivNomeProduto>
-            <DivPrecoProduto>
-              <ListaPrecoProduto>
-                <ItemPrecoProduto>P - R$100,00</ItemPrecoProduto>
-                <ItemPrecoProduto>M - R$100,00</ItemPrecoProduto>
-                <ItemPrecoProduto>G - R$100,00</ItemPrecoProduto>
-              </ListaPrecoProduto>
-            </DivPrecoProduto>
-          </Produto>
-        </Categoria>
+
+        {categorias.map((categoria, key) => (
+          <Categoria key = {key}>
+            <TituloCategoria>{categoria.nome}</TituloCategoria>
+            {categoria.produtos.map((produto, chave)=>(
+            <Produto key={chave}>
+              <DivNomeProduto>
+                <NomeProduto>
+                  <TituloProduto>{produto.sabor} - </TituloProduto> {produto.descricao}
+                </NomeProduto>
+              </DivNomeProduto>
+              <DivPrecoProduto>
+                <ListaPrecoProduto>
+                  <ItemPrecoProduto>P - R${parseFloat(produto.precoP).toFixed(2)}</ItemPrecoProduto>
+                  <ItemPrecoProduto>M - R${parseFloat(produto.precoM).toFixed(2)}</ItemPrecoProduto>
+                  <ItemPrecoProduto>G - R${parseFloat(produto.precoG).toFixed(2)}</ItemPrecoProduto>
+                </ListaPrecoProduto>
+              </DivPrecoProduto>
+            </Produto>
+            ))}
+          </Categoria>
+        ))}
       </AreaCardapio>
       <Footer />
     </>

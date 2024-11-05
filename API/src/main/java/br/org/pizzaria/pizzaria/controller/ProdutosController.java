@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import br.org.pizzaria.pizzaria.service.ProdutosService;
 
 @RestController
 @RequestMapping("/api/produtos")
+@CrossOrigin(origins = "*")
 public class ProdutosController {
 	
 	@Autowired
@@ -44,8 +46,9 @@ public class ProdutosController {
 	}
 
     @PostMapping
-    public Produtos create(@RequestBody ProdutoInserirDTO produtoInserirDTO) {
-        return produtosService.save(produtoInserirDTO);
+    public ResponseEntity<Produtos>  create(@RequestBody ProdutoInserirDTO produtoInserirDTO) {
+    	Produtos produto = produtosService.save(produtoInserirDTO);
+        return ResponseEntity.ok(produto);
     }
 
     @PutMapping("/{id}")
