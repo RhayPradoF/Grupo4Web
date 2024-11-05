@@ -28,36 +28,50 @@ export default function Login() {
   const [senha, setSenha] = useState('');
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [erroEntrada, setErroEntrada] = useState('');
-  const [user, setUser] = useState({});
+  const [usuario, setUsuario] = useState({});
 
 
   useEffect(() => {
-    fetch("https://api.github.com/users/RhayPradoF") //substituir pela nossa api
-    .then((resposta)=> resposta.json())
-    .then((json) => setUser(json))
-    .then(()=> setUser(resposta))
-    .catch("Problema na requisição");
-
-},[]);
-
+    fetch("https://6722c0d12108960b9cc57abf.mockapi.io/clientes")
+      .then((resposta) => resposta.json())
+      .then((json) => setUsuario(json)) 
+      .catch((error) => console.error("Problema na requisição", error));
+  }, []);
 
   const handleLogin = (event) => {
     event.preventDefault();
     if (email === '' || senha === '') {
-      alert('Por favor, preencha todos os campos.');
-      return;
+        alert('Por favor, preencha todos os campos.');
+        return;
     }
 
-    // Simular a chamada de API para verificar o login
-    setTimeout(() => {
-      if (email === 'admin@example.com' && senha === 'admin123') {
-        alert('Login realizado com sucesso!');
-        window.location.href = '/';
-      } else {
-        setErroEntrada('E-mail ou senha inválidos.');
-      }
-    }, 1000);
-  };
+    fetch("https://6722c0d12108960b9cc57abf.mockapi.io/clientes")
+        .then((resposta) => {
+            if (!resposta.ok) {
+                throw new Error('Erro ao buscar usuários');
+            }
+            return resposta.json();
+        })
+        .then((usuarios) => {
+            const usuarioEncontrado = usuarios.find(usuario => usuario.email === email && usuario.senha === senha);
+            
+            if (usuarioEncontrado) {
+                alert('Login realizado com sucesso!');
+                              
+                if (usuarioEncontrado.isAdmin) {
+                    window.location.href = '/admin'; // só se o usuário for admin, redirecionar para a tela de admin
+                } else {
+                      window.location.href = '/';
+                }
+            } else {
+                setErroEntrada('E-mail ou senha inválidos.');
+            }
+        })
+        .catch((error) => {
+            console.error('Erro ao realizar login:', error);
+            setErroEntrada('Erro ao realizar login. Tente novamente.');
+        });
+};
 
   return (
       <>
