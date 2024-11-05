@@ -2,6 +2,8 @@ package br.org.pizzaria.pizzaria.domain;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,15 +20,18 @@ public class Produtos {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String tamanho;
-
 	private String sabor;
 
 	private String descricao;
 
-	private Double preco;
+	private Double precoP;
+
+	private Double precoM;
+
+	private Double precoG;
 
 	@ManyToOne
+	@JsonBackReference
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 
@@ -38,14 +43,6 @@ public class Produtos {
 		this.id = id;
 	}
 
-	public String getTamanho() {
-		return tamanho;
-	}
-
-	public void setTamanho(String tamanho) {
-		this.tamanho = tamanho;
-	}
-
 	public String getSabor() {
 		return sabor;
 	}
@@ -54,20 +51,36 @@ public class Produtos {
 		this.sabor = sabor;
 	}
 
+	public Double getPrecoP() {
+		return precoP;
+	}
+
+	public void setPrecoP(Double precoP) {
+		this.precoP = precoP;
+	}
+
+	public Double getPrecoM() {
+		return precoM;
+	}
+
+	public void setPrecoM(Double precoM) {
+		this.precoM = precoM;
+	}
+
+	public Double getPrecoG() {
+		return precoG;
+	}
+
+	public void setPrecoG(Double precoG) {
+		this.precoG = precoG;
+	}
+
 	public String getDescricao() {
 		return descricao;
 	}
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
-
-	public Double getPreco() {
-		return preco;
-	}
-
-	public void setPreco(Double preco) {
-		this.preco = preco;
 	}
 
 	public Categoria getCategoria() {

@@ -4,32 +4,52 @@ import br.org.pizzaria.pizzaria.domain.Produtos;
 
 public class ProdutoInserirDTO {
 
-	private String tamanho;
-	
 	private String sabor;
 
 	private String descricao;
 
-	private Double preco;
-	
+	private Double precoP;
+
+	private Double precoM;
+
+	private Double precoG;
+
 	private Long idCategoria;
-	
-	public ProdutoInserirDTO(){}
-	
+
+	public ProdutoInserirDTO() {
+	}
+
 	public ProdutoInserirDTO(Produtos produtos) {
-		this.tamanho = produtos.getTamanho();
 		this.sabor = produtos.getSabor();
 		this.descricao = produtos.getDescricao();
-		this.preco = produtos.getPreco();
+		this.precoP = produtos.getPrecoP();
+		this.precoM = produtos.getPrecoM();
+		this.precoG = produtos.getPrecoG();
 		this.idCategoria = produtos.getCategoria().getId();
 	}
 
-	public String getTamanho() {
-		return tamanho;
+	public Double getPrecoP() {
+		return precoP;
 	}
 
-	public void setTamanho(String tamanho) {
-		this.tamanho = tamanho;
+	public void setPrecoP(Double precoP) {
+		this.precoP = precoP;
+	}
+
+	public Double getPrecoM() {
+		return precoM;
+	}
+
+	public void setPrecoM(Double precoM) {
+		this.precoM = precoM;
+	}
+
+	public Double getPrecoG() {
+		return precoG;
+	}
+
+	public void setPrecoG(Double precoG) {
+		this.precoG = precoG;
 	}
 
 	public String getSabor() {
@@ -48,14 +68,6 @@ public class ProdutoInserirDTO {
 		this.descricao = descricao;
 	}
 
-	public Double getPreco() {
-		return preco;
-	}
-
-	public void setPreco(Double preco) {
-		this.preco = preco;
-	}
-
 	public Long getIdCategoria() {
 		return idCategoria;
 	}
@@ -63,5 +75,5 @@ public class ProdutoInserirDTO {
 	public void setIdCategoria(Long idCategoria) {
 		this.idCategoria = idCategoria;
 	}
-	
+
 }
