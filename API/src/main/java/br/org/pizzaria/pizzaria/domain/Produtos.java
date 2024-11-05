@@ -19,17 +19,16 @@ public class Produtos {
 	private Long id;
 
 	private String tamanho;
-	
-	private String descricao;
 
 	private String sabor;
+
+	private String descricao;
 
 	private Double preco;
 
 	@ManyToOne
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
-	
 
 	public Long getId() {
 		return id;
@@ -53,6 +52,14 @@ public class Produtos {
 
 	public void setSabor(String sabor) {
 		this.sabor = sabor;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	public Double getPreco() {
