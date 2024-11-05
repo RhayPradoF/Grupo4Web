@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.org.pizzaria.pizzaria.domain.Produtos;
+import br.org.pizzaria.pizzaria.dto.ProdutoInserirDTO;
 import br.org.pizzaria.pizzaria.repository.ProdutosRepository;
 import br.org.pizzaria.pizzaria.service.ProdutosService;
 
@@ -43,18 +44,19 @@ public class ProdutosController {
 	}
 
     @PostMapping
-    public Produtos create(@RequestBody Produtos produto) {
-        return produtosService.save(produto);
+    public Produtos create(@RequestBody ProdutoInserirDTO produtoInserirDTO) {
+        return produtosService.save(produtoInserirDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produtos> update(@PathVariable Long id, @RequestBody Produtos produto) {
-        if (!produtosService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        produto.setId(id);
-        return ResponseEntity.ok(produtosService.save(produto));
-    }
+	public ResponseEntity<ProdutoInserirDTO> alterar(@PathVariable Long id, @RequestBody ProdutoInserirDTO produtoInserirDTO) {
+		if (!produtosRepository.existsById(id)) {
+			return ResponseEntity.notFound().build();
+		}
+		produtosService.save(produtoInserirDTO);
+		return ResponseEntity.ok(produtoInserirDTO);
+	}
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
