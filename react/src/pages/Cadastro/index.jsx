@@ -1,57 +1,47 @@
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 import { 
-    Container, TotalTitleArea, AreaTitle, Title, Subtitle, AreaSubtitle, 
-    AreaForm, Form, Label, Input, Button, InputContainer, ErrorMessage 
-} from './Cadastro.style.jsx'; // Importação dos componentes estilizados
+    Container, 
+    TotalTitleArea, 
+    AreaTitle, 
+    Title, 
+    Subtitle, 
+    AreaSubtitle, 
+    AreaForm, 
+    Form, 
+    Label, 
+    Input, 
+    Button, 
+    InputContainer, 
+    ErrorMessage 
+} from './Cadastro.style.jsx';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 export default function Cadastro() {
 
-    const [nome, setNome] = useState('');
-    const [email, setEmail] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [senha, setSenha] = useState('');
-    const [confirmarSenha, setConfirmarSenha] = useState('');
-    const [erro, setErro] = useState('');
+    const [erro, setErro] = useState(null);
+    
 
-    function cadastrar(event) {
-        event.preventDefault();
+    let navigate = useNavigate();
+    const {register, handleSubmit} = useForm();
 
-        const novoUsuario = {
-            email: email,
-            nome: nome,
-            cpf: cpf,
-            senha: senha,
-            confirmarSenha: confirmarSenha,
-        };
+    const cadastroUsuario = (data) => {
+        axios
+        .post("http://localhost:8080/usuario", data)
+        .then (() => {
+            console.log("Deu certo")
+            navigate("/");
+        })
+        .catch(() => {
+            console.log('Deu ruim');
+            
+        })
+};
 
-        if (email === '' || nome === '' || cpf === '' || senha === '' || confirmarSenha === '') {
-            alert('Por favor, preencha todos os campos');
-            return;
-        } else if (confirmarSenha !== senha) {
-            alert('As senhas precisam ser iguais');
-            return;
-        } else if (senha.length !== 8) {
-            alert('A senha deve ter exatamente 8 caracteres');
-            return;
-        }
 
-        const emailCadastrado = false; // Esta variável deve ser verificada na API
-        const cpfCadastrado = false; // Esta variável deve ser verificada na API
-
-        if (emailCadastrado) {
-            alert('E-mail já cadastrado');
-            return;
-        }
-        if (cpfCadastrado) {
-            alert('CPF já cadastrado');
-            return;
-        }
-
-        alert('Cadastrado com sucesso!');
-    }
 
     return (
         <Container>
@@ -66,15 +56,14 @@ export default function Cadastro() {
             </TotalTitleArea>
 
             <AreaForm>
-                <Form onSubmit={cadastrar}>
+                <Form onSubmit={handleSubmit(cadastroUsuario)}>
                     <InputContainer>
                         <Label htmlFor="nome">Nome:</Label>
                         <Input
                             type="text"
                             id="nome"
                             name="nome"
-                            value={nome}
-                            onChange={(event) => setNome(event.target.value)}
+                            {...register("nome")}
                             required
                         />
                     </InputContainer>
@@ -85,8 +74,7 @@ export default function Cadastro() {
                             type="email"
                             id="email"
                             name="email"
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
+                            {...register("email")}
                             required
                         />
                     </InputContainer>
@@ -97,8 +85,7 @@ export default function Cadastro() {
                             type="text"
                             id="cpf"
                             name="cpf"
-                            value={cpf}
-                            onChange={(event) => setCpf(event.target.value)}
+                            {...register("cpf")}
                             required
                         />
                     </InputContainer>
@@ -109,20 +96,18 @@ export default function Cadastro() {
                             type="password"
                             id="senha"
                             name="senha"
-                            value={senha}
-                            onChange={(event) => setSenha(event.target.value)}
+                            {...register("senha")}
                             required
                         />
                     </InputContainer>
 
                     <InputContainer>
-                        <Label htmlFor="confirmarsenha">Confirmar Senha:</Label>
+                        <Label htmlFor="confirmasenha">Confirmar Senha:</Label>
                         <Input
                             type="password"
-                            id="confirmarsenha"
-                            name="confirmarsenha"
-                            value={confirmarSenha}
-                            onChange={(event) => setConfirmarSenha(event.target.value)}
+                            id="confirmasenha"
+                            name="confirmasenha"
+                            {...register("confirmaSenha")}
                             required
                         />
                     </InputContainer>
