@@ -15,25 +15,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.org.pizzaria.pizzaria.domain.Categoria;
 import br.org.pizzaria.pizzaria.domain.Produtos;
+import br.org.pizzaria.pizzaria.dto.ProdutoDTO;
 import br.org.pizzaria.pizzaria.dto.ProdutoInserirDTO;
+import br.org.pizzaria.pizzaria.repository.CategoriaRepository;
 import br.org.pizzaria.pizzaria.repository.ProdutosRepository;
 import br.org.pizzaria.pizzaria.service.ProdutosService;
 
 @RestController
-@RequestMapping("/api/produtos")
+@RequestMapping("/produtos")
 @CrossOrigin(origins = "*")
 public class ProdutosController {
 	
 	@Autowired
 	private ProdutosRepository produtosRepository;
+	
+	@Autowired
+	private CategoriaRepository categoriaRepository;
+
 
     @Autowired
     private ProdutosService produtosService;
 
     @GetMapping
-    public List<Produtos> getAll() {
-        return produtosService.findAll();
+    public List<ProdutoDTO> getAll() {
+        List <ProdutoDTO> produtoDTO = produtosService.findAll();
+        return produtoDTO;
     }
 
     @GetMapping("/{id}")
@@ -56,7 +64,15 @@ public class ProdutosController {
 		if (!produtosRepository.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
-		produtosService.save(produtoInserirDTO);
+		Optional<Categoria> categoriaOPT = categoriaRepository.findById(produtoInserirDTO.getIdCategoria());
+		Produtos produtos = new Produtos();
+		produtos.setCategoria(categoriaOPT.get());
+		produtos.setDescricao(produtoInserirDTO.getDescricao());
+		produtos.setPrecoG(produtoInserirDTO.getPrecoG());
+		produtos.setPrecoM(produtoInserirDTO.getPrecoM());
+		produtos.setPrecoP(produtoInserirDTO.getPrecoP());
+		produtos.setSabor(produtoInserirDTO.getSabor());
+		produtosRepository.save(produtos);
 		return ResponseEntity.ok(produtoInserirDTO);
 	}
     

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.org.pizzaria.pizzaria.domain.Categoria;
 import br.org.pizzaria.pizzaria.domain.Produtos;
+import br.org.pizzaria.pizzaria.dto.ProdutoDTO;
 import br.org.pizzaria.pizzaria.dto.ProdutoInserirDTO;
 import br.org.pizzaria.pizzaria.repository.CategoriaRepository;
 import br.org.pizzaria.pizzaria.repository.ProdutosRepository;
@@ -21,8 +22,10 @@ public class ProdutosService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    public List<Produtos> findAll() {
-        return produtosRepository.findAll();
+    public List<ProdutoDTO> findAll() {
+        List<Produtos> produtos = produtosRepository.findAll();
+        List<ProdutoDTO> produtoDTO = produtos.stream().map(ProdutoDTO::new).toList();
+        return produtoDTO;
     }
 
     public Optional<Produtos> findById(Long id) {
