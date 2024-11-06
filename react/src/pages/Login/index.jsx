@@ -27,7 +27,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import BotaoFlutuante from "../../components/BotaoFlutuante";
 
-import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [email, setEmail] = useState("");
