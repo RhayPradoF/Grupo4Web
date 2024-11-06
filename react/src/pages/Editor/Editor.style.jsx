@@ -29,7 +29,7 @@ export const Label = styled.label`
 export const AreaTexto = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 60%;
 `;
 
 export const AreaNum = styled.div`
@@ -69,6 +69,10 @@ export const Botao = styled.button`
   font-family: "Raleway";
   cursor: pointer;
 
+  &:hover{
+    background-color: #fa0303;
+  }
+
 `;
 
 export const AreaBotao = styled.div`
@@ -89,6 +93,10 @@ export const BotaoAtualizar = styled.button`
   font-family: "Raleway";
   font-weight: 800;
   cursor: pointer;
+
+  &:hover{
+    background-color: #3a3a3a;
+  }
 
 `;
 
