@@ -1,7 +1,6 @@
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     Container, 
     TotalTitleArea, 
@@ -17,94 +16,32 @@ import {
     InputContainer, 
     ErrorMessage 
 } from './Cadastro.style.jsx';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 export default function Cadastro() {
 
-    const [nome, setNome] = useState('');
-    const [email, setEmail] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [senha, setSenha] = useState('');
-    const [confirmarSenha, setConfirmarSenha] = useState('');
-    const [erro, setErro] = useState('');
+    const [erro, setErro] = useState(null);
+    
 
-    const verificarUsuarioExistente = async (email, cpf) => {
-        try {
-            const resposta = await fetch("https://6722c0d12108960b9cc57abf.mockapi.io/clientes");
-            const usuarios = await resposta.json();
+    let navigate = useNavigate();
+    const {register, handleSubmit} = useForm();
 
-            const emailCadastrado = usuarios.some(usuario => usuario.email === email);
-            const cpfCadastrado = usuarios.some(usuario => usuario.cpf === cpf);
-
-            return { emailCadastrado, cpfCadastrado };
-        } catch (error) {
-            console.error("Erro ao verificar usuários:", error);
-            return { emailCadastrado: false, cpfCadastrado: false };
-        }
-    };
-
-    async function cadastrar(event) {
-        event.preventDefault();
-
-        if (email === '' || nome === '' || cpf === '' || senha === '' || confirmarSenha === '') {
-            setErro('Por favor, preencha todos os campos');
-            return;
-        } else if (confirmarSenha !== senha) {
-            setErro('As senhas precisam ser iguais');
-            return;
-        } else if (senha.length !== 8) {
-            setErro('A senha deve ter exatamente 8 caracteres');
-            return;
-        }
-
-        const { emailCadastrado, cpfCadastrado } = await verificarUsuarioExistente(email, cpf);
-
-        if (emailCadastrado) {
-            setErro('E-mail já cadastrado');
-            return;
-        }
-        if (cpfCadastrado) {
-            setErro('CPF já cadastrado');
-            return;
-        }
-
-        const novoUsuario = {
-            email: email,
-            nome: nome,
-            cpf: cpf,
-            senha: senha,
-        };
-
-       
-        try {
-            const resposta = await fetch("https://6722c0d12108960b9cc57abf.mockapi.io/clientes", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(novoUsuario),
-            });
-
+    const cadastroUsuario = (data) => {
+        axios
+        .post("http://localhost:8080/usuario", data)
+        .then (() => {
+            console.log("Deu certo")
+            navigate("/");
+        })
+        .catch(() => {
+            console.log('Deu ruim');
             
-            if (!resposta.ok) {
-                throw new Error('Erro ao cadastrar usuário');
-            }
+        })
+};
 
-     
-            console.log('Usuário cadastrado com sucesso:', novoUsuario);
 
-            alert('Cadastrado com sucesso!');
-          
-            setNome('');
-            setEmail('');
-            setCpf('');
-            setSenha('');
-            setConfirmarSenha('');
-            setErro('');
-        } catch (error) {
-            console.error('Erro ao realizar cadastro:', error);
-            setErro('Erro ao realizar cadastro. Tente novamente.');
-        }
-    }
 
     return (
         <Container>
@@ -119,15 +56,14 @@ export default function Cadastro() {
             </TotalTitleArea>
 
             <AreaForm>
-                <Form onSubmit={cadastrar}>
+                <Form onSubmit={handleSubmit(cadastroUsuario)}>
                     <InputContainer>
                         <Label htmlFor="nome">Nome:</Label>
                         <Input
                             type="text"
                             id="nome"
                             name="nome"
-                            value={nome}
-                            onChange={(event) => setNome(event.target.value)}
+                            {...register("nome")}
                             required
                         />
                     </InputContainer>
@@ -138,8 +74,7 @@ export default function Cadastro() {
                             type="email"
                             id="email"
                             name="email"
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
+                            {...register("email")}
                             required
                         />
                     </InputContainer>
@@ -150,8 +85,7 @@ export default function Cadastro() {
                             type="text"
                             id="cpf"
                             name="cpf"
-                            value={cpf}
-                            onChange={(event) => setCpf(event.target.value)}
+                            {...register("cpf")}
                             required
                         />
                     </InputContainer>
@@ -162,20 +96,18 @@ export default function Cadastro() {
                             type="password"
                             id="senha"
                             name="senha"
-                            value={senha}
-                            onChange={(event) => setSenha(event.target.value)}
+                            {...register("senha")}
                             required
                         />
                     </InputContainer>
 
                     <InputContainer>
-                        <Label htmlFor="confirmarsenha">Confirmar Senha:</Label>
+                        <Label htmlFor="confirmasenha">Confirmar Senha:</Label>
                         <Input
                             type="password"
-                            id="confirmarsenha"
-                            name="confirmarsenha"
-                            value={confirmarSenha}
-                            onChange={(event) => setConfirmarSenha(event.target.value)}
+                            id="confirmasenha"
+                            name="confirmasenha"
+                            {...register("confirmaSenha")}
                             required
                         />
                     </InputContainer>
