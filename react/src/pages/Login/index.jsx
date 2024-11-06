@@ -24,10 +24,13 @@ import {
   Form,
 } from "./Login.style";
 
+import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+
+  let navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,8 +40,16 @@ export default function Login() {
         `http://localhost:8080/usuario/${email}`
       );
       console.log("Resposta da API:", response.data);
+
+      if (response.data.senha === senha && response.data.nome === "Admin") {
+        navigate("/editor");
+      } else if (response.data.senha === senha) {
+        navigate("/");
+      } else {
+        alert("Senha incorreta, digite de novo!!");
+      }
     } catch (error) {
-      console.error("Erro ao buscar o e-mail:", error);
+      error("Erro ao buscar o e-mail:", error);
     }
   };
 
@@ -67,6 +78,7 @@ export default function Login() {
                 type="email"
                 id="email"
                 placeholder="Digite seu E-mail"
+                required
                 value={email}
                 onChange={(event) => setEmail(event.target.value)} // Atualiza o estado do e-mail
               />
@@ -79,12 +91,11 @@ export default function Login() {
                 type={senhaVisivel ? "text" : "password"}
                 id="senha"
                 placeholder="Digite sua Senha"
+                required
                 value={senha}
                 onChange={(event) => setSenha(event.target.value)} // Atualiza o estado da senha
               />
             </InputContainer>
-
-            {/* {erroEntrada && <ErrorMessage>{erroEntrada}</ErrorMessage>} */}
 
             <Button type="submit">Login</Button>
           </Form>
