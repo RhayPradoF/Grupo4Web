@@ -62,6 +62,7 @@ export const Botao = styled.button`
   color: white;
   font-family: "Raleway";
   cursor: pointer;
+
 `;
 
 export const AreaBotao = styled.div`
@@ -82,6 +83,7 @@ export const BotaoAtualizar = styled.button`
   font-family: "Raleway";
   font-weight: 800;
   cursor: pointer;
+
 `;
 
 export const Lixo = styled.img`
@@ -114,4 +116,6 @@ export const BtnLixo = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-`
+`;
+
+
