@@ -6,6 +6,7 @@ import telefone from '../../assets/telefoneIcon.png'
 import whatsapp from '../../assets/wppIcon.png';
 import email from '../../assets/mailIcon.png';
 import cozinheiro from '../../assets/pizzaCozinheiro.png';
+import BotaoFlutuante from '../../components/BotaoFlutuante'
 
 export default function Contatos() {
   return (
@@ -55,7 +56,7 @@ export default function Contatos() {
         </Slogan>
         </AreaSlogan>
       </Banner>
-
+      <BotaoFlutuante/>
       <Footer />
     </>
   );
