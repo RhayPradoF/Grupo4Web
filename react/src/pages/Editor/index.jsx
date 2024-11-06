@@ -24,6 +24,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import axios from "axios";
 
+//Os id presente ao longo do codigo são dos blocos
 export default function Editor() {
   const [cards, setCards] = useState([]);
   const [idCat, setCat] = useState();
@@ -33,18 +34,20 @@ export default function Editor() {
     precoP: 0,
     precoM: 0,
     precoG: 0,
-    idCategoria: 1
+    idCategoria: 1, // Default "Salgado"
   });
 
+  // Pegar os dados existentes da API, funcionando
   useEffect(() => {
     axios
       .get("http://localhost:8080/produtos")
       .then((response) => {
-        setCards(response.data); 
+        setCards(response.data); // Preencher os cards com os dados da API, funcionando
       })
       .catch(() => console.log("Problemas ao carregar os dados"));
   }, []);
 
+  // Função para adicionar um novo card na API, funcionando
   const addCard = () => {
     const newCardData = {
       sabor: newProduct.sabor,
@@ -55,23 +58,25 @@ export default function Editor() {
       idCategoria: newProduct.idCategoria,
     };
 
+    // Adicionar novo produto na API, funcionando
     axios
       .post("http://localhost:8080/produtos", newCardData)
       .then((response) => {
         console.log("Produto adicionado com sucesso");
-        setCards([...cards, response.data]);
+        setCards([...cards, response.data]); // Atualiza o estado com o novo card retornado pela API
         setNewProduct({
           sabor: "",
           descricao: "",
           precoP: 0,
           precoM: 0,
           precoG: 0,
-          idCategoria: 1,
+          idCategoria: 1, // Reset ao valor padrão de categoria
         });
       })
       .catch(() => console.log("Erro ao adicionar produto"));
   };
 
+  // Função para lidar com mudanças nos inputs do formulário, essa função peguei por fora, não entendi mto bem oq faz
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewProduct({
@@ -80,6 +85,7 @@ export default function Editor() {
     });
   };
 
+  // Função apagar, funcionando
   function apagar(id) {
     axios
       .delete(`http://localhost:8080/produtos/${id}`)
@@ -137,6 +143,7 @@ export default function Editor() {
       });
   }
 
+  //Codigo ta confuso mas funcional eu acho
   return (
     <>
       <Header />
@@ -166,6 +173,9 @@ export default function Editor() {
                     onChange={(e) => (tempProduct.descricao = e.target.value)}
                   />
 
+                  {/* Esses botoes tao inuteis, nem sei se vai dar tempo de dar uma função pra eles, no formulario de envio so consigo
+                  colocar os valores que ja foram definidos para o campo, se não da erro, por exemplo, se eu escrever "batata" no 
+                  categoria da ruim */}
                   <AreaBotao>
                     <Botao
                       onClick={(e) => {
@@ -191,6 +201,8 @@ export default function Editor() {
                     >
                       Bebida
                     </Botao>
+
+                    {/* Nao tava conseguindo fazer um update nessa paginda, então pensei em criar outra q so puxa o Card selecionado por ID e altera por la */}
 
                     <BotaoAtualizar
                       onClick={(e) => {
@@ -244,6 +256,7 @@ export default function Editor() {
         ))}
 
 
+        {/* Daq pra baixo é o formulario para adicionar produto, so precida de um formatação pra ficar bonito */}
         <AreaAdd>
           <Add>Adicionar novo produto</Add>
           <Form>
@@ -300,3 +313,5 @@ export default function Editor() {
     </>
   );
 }
+
+//Falta só o update, formatação do formulario de produto novo
