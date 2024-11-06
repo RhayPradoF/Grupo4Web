@@ -4,7 +4,7 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(() => {
-    // Verifica se já existe um usuário salvo no localStorage
+    
     const salvarUsuario = localStorage.getItem('usuario');
     return salvarUsuario ? JSON.parse(salvarUsuario) : null;
   });

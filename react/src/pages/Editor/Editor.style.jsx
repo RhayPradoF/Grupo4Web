@@ -45,12 +45,18 @@ export const InputText = styled.input`
   padding: 5px 10px;
   margin-bottom: 10px;
   font-size: 18px;
+  &::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+  }
 `;
 
 export const InputNum = styled.input`
   padding: 5px 10px;
   margin-bottom: 10px;
   font-size: 18px;
+  &::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+  }
 `;
 
 export const Botao = styled.button`
@@ -113,5 +119,5 @@ export const Adicionar = styled.button`
 export const BtnLixo = styled.button`
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: pointer;
 `
