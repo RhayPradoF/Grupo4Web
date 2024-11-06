@@ -22,7 +22,6 @@ import {
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 //Os id presente ao longo do codigo são dos blocos
 export default function Editor() {
@@ -36,8 +35,6 @@ export default function Editor() {
     precoG: 0,
     idCategoria: 1, // Default "Salgado"
   });
-
-
 
   // Pegar os dados existentes da API, funcionando
   useEffect(() => {
@@ -97,21 +94,19 @@ export default function Editor() {
       })
       .catch(() => console.log("Problemas na hora de apagar"));
   }
-  
-  let tempProduct = {
-      sabor: null,
-      descricao: null,
-      precoP: null,
-      precoM: null,
-      precoG: null,
-  }
 
+  let tempProduct = {
+    sabor: null,
+    descricao: null,
+    precoP: null,
+    precoM: null,
+    precoG: null,
+  };
 
   function atualizar(card) {
-
     console.log(tempProduct.sabor);
-    
-    
+    console.log(tempProduct.precoM);
+
     let atProduct = {
       sabor: card.sabor,
       descricao: card.descricao,
@@ -121,29 +116,30 @@ export default function Editor() {
       idCategoria: card.idCategoria,
     };
 
-    if (tempProduct.sabor != null ) {
-      atProduct.sabor = tempProduct.sabor
+    if (tempProduct.sabor != null) {
+      atProduct.sabor = tempProduct.sabor;
     }
-    if(tempProduct.descricao != null ){
-      atProduct.descricao = tempProduct.descricao
+    if (tempProduct.descricao != null) {
+      atProduct.descricao = tempProduct.descricao;
     }
-    if(tempProduct.precoP != null ){
-      atProduct.precoP = tempProduct.precoP
+    if (tempProduct.precoP != null) {
+      atProduct.precoP = tempProduct.precoP;
     }
-    if(tempProduct.precoM != null ){
-      atProduct.precoM = tempProduct.precoM
+    if (tempProduct.precoM != null) {
+      atProduct.precoM = tempProduct.precoM;
     }
-    if(tempProduct.precoG != null ){
-      atProduct.precoG = tempProduct.precoG
+    if (tempProduct.precoG != null) {
+      atProduct.precoG = tempProduct.precoG;
     }
 
-    console.log(atProduct.sabor);
-
-    axios.put(`http://localhost:8080/produtos/${card.id}`, atProduct)
-    .then(() => { console.log('fooi');
-    })
-    .catch(()=>{console.log('nao foi');
-    })
+    axios
+      .put(`http://localhost:8080/produtos/${card.id}`, atProduct)
+      .then(() => {
+        console.log("Sucesso ao atualizar");
+      })
+      .catch(() => {
+        console.log("Erro na requisão ao atualizar");
+      });
   }
 
   //Codigo ta confuso mas funcional eu acho
@@ -156,53 +152,98 @@ export default function Editor() {
             <Form>
               <Area>
                 <AreaTexto>
+                  <Label>Categoria: </Label>
+                  <InputText
+                    type="number"
+                    value={card.idCategoria}
+                    onChange={() => (value = value)}
+                  />
                   <Label>Sabor: </Label>
                   <InputText
                     defaultValue={card.sabor}
-                    onBlur={(e) => {
-                      (tempProduct.sabor = e.target.value)
+                    onChange={(e) => {
+                      tempProduct.sabor = e.target.value;
                       console.log(tempProduct.sabor);
-                      
-                      }}/>
+                    }}
+                  />
                   <Label>Descrição: </Label>
-                  <InputText defaultValue={card.descricao} onBlur={(e) => (tempProduct.descricao = e.target.value)}/>
-                  <Label>Categoria: </Label>
-                  <InputText defaultValue={card.idCategoria} value={card.idCategoria}/>
+                  <InputText
+                    defaultValue={card.descricao}
+                    onChange={(e) => (tempProduct.descricao = e.target.value)}
+                  />
 
                   {/* Esses botoes tao inuteis, nem sei se vai dar tempo de dar uma função pra eles, no formulario de envio so consigo
                   colocar os valores que ja foram definidos para o campo, se não da erro, por exemplo, se eu escrever "batata" no 
                   categoria da ruim */}
                   <AreaBotao>
-                    <Botao onClick={(e)=>{
-                      e.preventDefault();
-                      setCat(card.idCategoria = 1)
-                      }}>Salgado</Botao>
-                      <Botao onClick={(e)=>{
-                      e.preventDefault();
-                      setCat(card.idCategoria = 2)
-                      }}>Doce</Botao>
-                      <Botao onClick={(e)=>{
-                      e.preventDefault();
-                      setCat(card.idCategoria = 3)
-                      }}>Bebida</Botao>
+                    <Botao
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCat((card.idCategoria = 1));
+                      }}
+                    >
+                      Salgado
+                    </Botao>
+                    <Botao
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCat((card.idCategoria = 2));
+                      }}
+                    >
+                      Doce
+                    </Botao>
+                    <Botao
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCat((card.idCategoria = 3));
+                      }}
+                    >
+                      Bebida
+                    </Botao>
 
                     {/* Nao tava conseguindo fazer um update nessa paginda, então pensei em criar outra q so puxa o Card selecionado por ID e altera por la */}
 
-                    <BotaoAtualizar onClick={(e) => {
-                      e.preventDefault();
-                      atualizar(card)
-                      }}>
+                    <BotaoAtualizar
+                      onClick={(e) => {
+                        e.preventDefault();
+                        atualizar(card);
+                      }}
+                    >
                       Atualizar
                     </BotaoAtualizar>
                   </AreaBotao>
                 </AreaTexto>
                 <AreaNum>
                   <Label>ValorP: </Label>
-                  <InputNum type="number" defaultValue={parseFloat(card.precoP).toFixed(2)} onBlur={(e) => (tempProduct.precoP =  parseFloat(e.target.value).toFixed(2))}/>
+                  <InputNum
+                    type="number"
+                    defaultValue={parseFloat(card.precoP).toFixed(2)}
+                    onChange={(e) =>
+                      (tempProduct.precoP = parseFloat(e.target.value).toFixed(
+                        2
+                      ))
+                    }
+                  />
                   <Label>ValorM: </Label>
-                  <InputNum type="number" defaultValue={parseFloat(card.precoM).toFixed(2)} onBlur={(e) => (tempProduct.precoM =  parseFloat(e.target.value).toFixed(2))}/>
+                  <InputNum
+                    type="number"
+                    defaultValue={parseFloat(card.precoM).toFixed(2)}
+                    onChange={(e) =>
+                      (tempProduct.precoM = parseFloat(e.target.value).toFixed(
+                        2
+                      ))
+                    }
+                  />
                   <Label>ValorG: </Label>
-                  <InputNum type="number" defaultValue={parseFloat(card.precoG).toFixed(2)} onBlur={(e) => (tempProduct.precoG = parseFloat(e.target.value).toFixed(2))}/>
+                  <InputNum
+                    type="number"
+                    defaultValue={parseFloat(card.precoG).toFixed(2)}
+                    onChange={(e) =>
+                      (tempProduct.precoG = parseFloat(e.target.value).toFixed(
+                        2
+                      ))
+                    }
+                  />
 
                   <BtnLixo onClick={() => apagar(card.id)}>
                     <Lixo src={lixo} alt="Apagar" />
@@ -241,7 +282,7 @@ export default function Editor() {
               <AreaNum>
                 <Label>ValorP: </Label>
                 <InputNum
-                type="number"
+                  type="number"
                   name="precoP"
                   value={newProduct.precoP}
                   onChange={handleInputChange}
