@@ -60,6 +60,28 @@ public class ProdutosController {
     }
 
     @PutMapping("/{id}")
+
+    public ResponseEntity<ProdutoInserirDTO> alterar(@PathVariable Long id, @RequestBody ProdutoInserirDTO produtoInserirDTO) {
+        if (!produtosRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Produtos produtos = produtosRepository.findById(id).orElseThrow();
+
+        Optional<Categoria> categoriaOPT = categoriaRepository.findById(produtoInserirDTO.getIdCategoria());
+        if (categoriaOPT.isPresent()) {
+            produtos.setCategoria(categoriaOPT.get());
+        }
+        produtos.setDescricao(produtoInserirDTO.getDescricao());
+        produtos.setPrecoG(produtoInserirDTO.getPrecoG());
+        produtos.setPrecoM(produtoInserirDTO.getPrecoM());
+        produtos.setPrecoP(produtoInserirDTO.getPrecoP());
+        produtos.setSabor(produtoInserirDTO.getSabor());
+
+        produtosRepository.save(produtos);
+        return ResponseEntity.ok(produtoInserirDTO);
+    }
+
 	public ResponseEntity<ProdutoInserirDTO> alterar(@PathVariable Long id, @RequestBody ProdutoInserirDTO produtoInserirDTO) {
 		if (!produtosRepository.existsById(id)) {
 			return ResponseEntity.notFound().build();
