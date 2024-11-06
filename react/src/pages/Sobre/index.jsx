@@ -5,6 +5,7 @@ import { ImgSobre, Texto } from "./Sobre.style";
 import Pizza1 from "../../assets/pizza1.png";
 import Pizza2 from "../../assets/pizza2.png"
 import Pizza3 from "../../assets/pizza3.png"
+import BotaoFlutuante from '../../components/BotaoFlutuante'
 
 export default function Sobre() {
   return (
@@ -52,6 +53,7 @@ export default function Sobre() {
           </p>
         </Texto>
       </main>
+      <BotaoFlutuante/>
       <Footer />
     </div>
   );
