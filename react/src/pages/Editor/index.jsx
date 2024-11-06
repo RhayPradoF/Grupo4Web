@@ -1,175 +1,276 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import styles from './Editor.module.css';
-import setaBaixo from '../../assets/seta-para-baixo.png';
-import setaCima from '../../assets/seta-para-cima.png';
-import lixo from '../../assets/trash.png';
-import CirCheio from '../../assets/circulo.png';
-import CirVazio from '../../assets/contorno-de-forma-de-circulo.png';
-import BotaoFlutuante from '../../components/BotaoFlutuante';
 
+import React, { useState, useEffect } from "react";
+import lixo from "../../assets/trash.png";
+import {
+  Container,
+  InputNum,
+  InputText,
+  Form,
+  Card,
+  Label,
+  AreaTexto,
+  AreaNum,
+  Area,
+  Botao,
+  AreaBotao,
+  BotaoAtualizar,
+  Lixo,
+  Add,
+  AreaAdd,
+  Adicionar,
+  BtnLixo,
+} from "./Editor.style";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import axios from "axios";
+import { Link } from "react-router-dom";
+
+//Os id presente ao longo do codigo são dos blocos
 export default function Editor() {
-  const [blocos, setBlocos] = useState([]);
+  const [cards, setCards] = useState([]);
+  const [idCat, setCat] = useState();
+  const [newProduct, setNewProduct] = useState({
+    sabor: "",
+    descricao: "",
+    precoP: 0,
+    precoM: 0,
+    precoG: 0,
+    idCategoria: 1, // Default "Salgado"
+  });
 
+
+
+  // Pegar os dados existentes da API, funcionando
   useEffect(() => {
-    fetchBlocos(); 
+    axios
+      .get("http://localhost:8080/produtos")
+      .then((response) => {
+        setCards(response.data); // Preencher os cards com os dados da API, funcionando
+      })
+      .catch(() => console.log("Problemas ao carregar os dados"));
   }, []);
 
-  const fetchBlocos = async () => {
-    try {
-      const response = await axios.get("https://localhost:8080");
-      setBlocos(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar blocos:", error);
-    }
+  // Função para adicionar um novo card na API, funcionando
+  const addCard = () => {
+    const newCardData = {
+      sabor: newProduct.sabor,
+      descricao: newProduct.descricao,
+      precoP: newProduct.precoP,
+      precoM: newProduct.precoM,
+      precoG: newProduct.precoG,
+      idCategoria: newProduct.idCategoria,
+    };
+
+    // Adicionar novo produto na API, funcionando
+    axios
+      .post("http://localhost:8080/produtos", newCardData)
+      .then((response) => {
+        console.log("Produto adicionado com sucesso");
+        setCards([...cards, response.data]); // Atualiza o estado com o novo card retornado pela API
+        setNewProduct({
+          sabor: "",
+          descricao: "",
+          precoP: 0,
+          precoM: 0,
+          precoG: 0,
+          idCategoria: 1, // Reset ao valor padrão de categoria
+        });
+      })
+      .catch(() => console.log("Erro ao adicionar produto"));
   };
 
-  const addBloco = async (data) => {
-    try {
-      const response = await axios.post("https://localhost:8080", data);
-      setBlocos([...blocos, response.data]);
-      console.log("Produto adicionado com sucesso");
-    } catch (error) {
-      console.error("Não foi possível adicionar o produto", error);
-    }
+  // Função para lidar com mudanças nos inputs do formulário, essa função peguei por fora, não entendi mto bem oq faz
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct({
+      ...newProduct,
+      [name]: value,
+    });
   };
 
-  const updateBlocoField = async (id, field, value) => {
-    const updatedBlocos = blocos.map(bloco =>
-      bloco.id === id ? { ...bloco, [field]: value } : bloco
-    );
-    setBlocos(updatedBlocos);
+  // Função apagar, funcionando
+  function apagar(id) {
+    axios
+      .delete(`http://localhost:8080/produtos/${id}`)
+      .then(() => {
+        console.log("Apagado com sucesso");
+        setCards(cards.filter((card) => card.id != id));
+      })
+      .catch(() => console.log("Problemas na hora de apagar"));
+  }
+  
+  let tempProduct = {
+      sabor: null,
+      descricao: null,
+      precoP: null,
+      precoM: null,
+      precoG: null,
+  }
+
+
+  function atualizar(card) {
+
+    console.log(tempProduct.sabor);
     
-    try {
-      await axios.put(`https://localhost:8080/${id}`, { [field]: value });
-    } catch (error) {
-      console.error("Erro ao atualizar bloco:", error);
+    
+    let atProduct = {
+      sabor: card.sabor,
+      descricao: card.descricao,
+      precoP: card.precoP,
+      precoM: card.precoM,
+      precoG: card.precoG,
+      idCategoria: card.idCategoria,
+    };
+
+    if (tempProduct.sabor != null ) {
+      atProduct.sabor = tempProduct.sabor
     }
-  };
-
-  const deleteBloco = async (id) => {
-    try {
-      await axios.delete(`https://localhost:8080/${id}`);
-      setBlocos(blocos.filter(bloco => bloco.id !== id));
-      console.log("Produto deletado com sucesso");
-    } catch (error) {
-      console.error("Erro ao deletar bloco:", error);
+    if(tempProduct.descricao != null ){
+      atProduct.descricao = tempProduct.descricao
     }
-  };
+    if(tempProduct.precoP != null ){
+      atProduct.precoP = tempProduct.precoP
+    }
+    if(tempProduct.precoM != null ){
+      atProduct.precoM = tempProduct.precoM
+    }
+    if(tempProduct.precoG != null ){
+      atProduct.precoG = tempProduct.precoG
+    }
 
-  const setCategoria = (id, categoria) => {
-    updateBlocoField(id, 'categoria', categoria);
-  };
+    console.log(atProduct.sabor);
 
-  const toggleBloco = (id) => {
-    setBlocos(blocos.map(bloco => (bloco.id === id ? { ...bloco, isOpen: !bloco.isOpen } : bloco)));
-  };
+    axios.put(`http://localhost:8080/produtos/${card.id}`, atProduct)
+    .then(() => { console.log('fooi');
+    })
+    .catch(()=>{console.log('nao foi');
+    })
+  }
 
+  //Codigo ta confuso mas funcional eu acho
   return (
-    <div>
+    <>
       <Header />
-      <div className={styles.container}>
-        {blocos.map((bloco) => (
-          <div key={bloco.id} className={styles.bloco}>
-            <div className={styles.blocoHeader}>
-              <span className={styles.blocoName}>{bloco.nome}</span>
-              <div>
-                <button className={styles.blocoToggle} onClick={() => toggleBloco(bloco.id)}>
-                  {bloco.isOpen ? <img src={setaCima} alt="Fechar" /> : <img src={setaBaixo} alt="Abrir" />}
-                </button>
-                <button className={styles.blocoDelete} onClick={() => deleteBloco(bloco.id)}>
-                  <img src={lixo} alt="Apagar" />
-                </button>
-              </div>
-            </div>
-            {bloco.isOpen && (
-              <form className={styles.blocoForm} onSubmit={(e) => { e.preventDefault(); }}>
-                <div className={styles.label}>
-                  Nome:
-                  <input
-                    type="text"
-                    value={bloco.nome}
-                    onChange={(e) => updateBlocoField(bloco.id, 'nome', e.target.value)}
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.label}>
-                  ValorP:
-                  <input
-                    type="text"
-                    value={bloco.valorP}
-                    onChange={(e) => updateBlocoField(bloco.id, 'valorP', e.target.value)}
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.label}>
-                  Categoria:
-                  <input
-                    type="text"
-                    value={bloco.categoria}
-                    onChange={(e) => updateBlocoField(bloco.id, 'categoria', e.target.value)}
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.label}>
-                  ValorM:
-                  <input
-                    type="text"
-                    value={bloco.valorM}
-                    onChange={(e) => updateBlocoField(bloco.id, 'valorM', e.target.value)}
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.label}>
-                  Ingredientes:
-                  <input
-                    type="text"
-                    value={bloco.ingredientes}
-                    onChange={(e) => updateBlocoField(bloco.id, 'ingredientes', e.target.value)}
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.label}>
-                  ValorG:
-                  <input
-                    type="text"
-                    value={bloco.valorG}
-                    onChange={(e) => updateBlocoField(bloco.id, 'valorG', e.target.value)}
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.buttonGroup}>
-                  <button onClick={() => setCategoria(bloco.id, 'salgada')}>
-                    <div className={styles.buttonContent}>
-                      <img src={bloco.categoria === 'salgada' ? CirCheio : CirVazio} alt="Salgada" />
-                      <span>Salgado</span>
-                    </div>
-                  </button>
-                  <button onClick={() => setCategoria(bloco.id, 'doce')}>
-                    <div className={styles.buttonContent}>
-                      <img src={bloco.categoria === 'doce' ? CirCheio : CirVazio} alt="Doce" />
-                      <span>Doce</span>
-                    </div>
-                  </button>
-                  <button onClick={() => setCategoria(bloco.id, 'bebida')}>
-                    <div className={styles.buttonContent}>
-                      <img src={bloco.categoria === 'bebida' ? CirCheio : CirVazio} alt="Bebida" />
-                      <span>Bebida</span>
-                    </div>
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
+      <Container>
+        {cards.map((card) => (
+          <Card key={card.id}>
+            <Form>
+              <Area>
+                <AreaTexto>
+                  <Label>Sabor: </Label>
+                  <InputText
+                    defaultValue={card.sabor}
+                    onBlur={(e) => {
+                      (tempProduct.sabor = e.target.value)
+                      console.log(tempProduct.sabor);
+                      
+                      }}/>
+                  <Label>Descrição: </Label>
+                  <InputText defaultValue={card.descricao} onBlur={(e) => (tempProduct.descricao = e.target.value)}/>
+                  <Label>Categoria: </Label>
+                  <InputText defaultValue={card.idCategoria} value={card.idCategoria}/>
+
+                  {/* Esses botoes tao inuteis, nem sei se vai dar tempo de dar uma função pra eles, no formulario de envio so consigo
+                  colocar os valores que ja foram definidos para o campo, se não da erro, por exemplo, se eu escrever "batata" no 
+                  categoria da ruim */}
+                  <AreaBotao>
+                    <Botao onClick={(e)=>{
+                      e.preventDefault();
+                      setCat(card.idCategoria = 1)
+                      }}>Salgado</Botao>
+                      <Botao onClick={(e)=>{
+                      e.preventDefault();
+                      setCat(card.idCategoria = 2)
+                      }}>Doce</Botao>
+                      <Botao onClick={(e)=>{
+                      e.preventDefault();
+                      setCat(card.idCategoria = 3)
+                      }}>Bebida</Botao>
+
+                    {/* Nao tava conseguindo fazer um update nessa paginda, então pensei em criar outra q so puxa o Card selecionado por ID e altera por la */}
+
+                    <BotaoAtualizar onClick={(e) => {
+                      e.preventDefault();
+                      atualizar(card)
+                      }}>
+                      Atualizar
+                    </BotaoAtualizar>
+                  </AreaBotao>
+                </AreaTexto>
+                <AreaNum>
+                  <Label>ValorP: </Label>
+                  <InputNum type="number" defaultValue={parseFloat(card.precoP).toFixed(2)} onBlur={(e) => (tempProduct.precoP =  parseFloat(e.target.value).toFixed(2))}/>
+                  <Label>ValorM: </Label>
+                  <InputNum type="number" defaultValue={parseFloat(card.precoM).toFixed(2)} onBlur={(e) => (tempProduct.precoM =  parseFloat(e.target.value).toFixed(2))}/>
+                  <Label>ValorG: </Label>
+                  <InputNum type="number" defaultValue={parseFloat(card.precoG).toFixed(2)} onBlur={(e) => (tempProduct.precoG = parseFloat(e.target.value).toFixed(2))}/>
+
+                  <BtnLixo onClick={() => apagar(card.id)}>
+                    <Lixo src={lixo} alt="Apagar" />
+                  </BtnLixo>
+                </AreaNum>
+              </Area>
+            </Form>
+          </Card>
         ))}
-        <button className={styles.addBloco} onClick={() => addBloco({ nome: '', categoria: '', valorP: '', valorM: '', ingredientes: '', valorG: '' })}>
-          + Adicionar mais produtos
-        </button>
-      </div>
-      <BotaoFlutuante/>
+
+
+        {/* Daq pra baixo é o formulario para adicionar produto, so precida de um formatação pra ficar bonito */}
+        <AreaAdd>
+          <Add>Adicionar novo produto</Add>
+          <Form>
+            <Area>
+              <AreaTexto>
+                <Label>Sabor: </Label>
+                <InputText
+                  name="sabor"
+                  value={newProduct.sabor}
+                  onChange={handleInputChange}
+                />
+                <Label>Descrição: </Label>
+                <InputText
+                  name="descricao"
+                  value={newProduct.descricao}
+                  onChange={handleInputChange}
+                />
+                <Label>Categoria: </Label>
+                <InputText
+                  name="idCategoria"
+                  value={newProduct.idCategoria}
+                  onChange={handleInputChange}
+                />
+              </AreaTexto>
+              <AreaNum>
+                <Label>ValorP: </Label>
+                <InputNum
+                type="number"
+                  name="precoP"
+                  value={newProduct.precoP}
+                  onChange={handleInputChange}
+                />
+                <Label>ValorM: </Label>
+                <InputNum
+                  type="number"
+                  name="precoM"
+                  value={newProduct.precoM}
+                  onChange={handleInputChange}
+                />
+                <Label>ValorG: </Label>
+                <InputNum
+                  type="number"
+                  name="precoG"
+                  value={newProduct.precoG}
+                  onChange={handleInputChange}
+                />
+              </AreaNum>
+            </Area>
+          </Form>
+        </AreaAdd>
+        <Adicionar onClick={addCard}>Adicionar Novo Produto</Adicionar>
+      </Container>
       <Footer />
-    </div>
+    </>
   );
 }
+
+//Falta só o update, formatação do formulario de produto novo
