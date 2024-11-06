@@ -205,6 +205,7 @@ export default function Editor() {
                   <InputNum
                     type="number"
                     defaultValue={parseFloat(card.precoP).toFixed(2)}
+                    step={0.01}
                     onChange={(e) =>
                       (tempProduct.precoP = parseFloat(e.target.value).toFixed(
                         2
@@ -215,6 +216,7 @@ export default function Editor() {
                   <InputNum
                     type="number"
                     defaultValue={parseFloat(card.precoM).toFixed(2)}
+                    step={0.01}
                     onChange={(e) =>
                       (tempProduct.precoM = parseFloat(e.target.value).toFixed(
                         2
@@ -225,6 +227,7 @@ export default function Editor() {
                   <InputNum
                     type="number"
                     defaultValue={parseFloat(card.precoG).toFixed(2)}
+                    step={0.01}
                     onChange={(e) =>
                       (tempProduct.precoG = parseFloat(e.target.value).toFixed(
                         2
