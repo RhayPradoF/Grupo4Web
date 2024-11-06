@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import lixo from "../../assets/trash.png";
 import {
@@ -212,6 +213,7 @@ export default function Editor() {
             </Form>
           </Card>
         ))}
+
 
         {/* Daq pra baixo é o formulario para adicionar produto, so precida de um formatação pra ficar bonito */}
         <AreaAdd>
