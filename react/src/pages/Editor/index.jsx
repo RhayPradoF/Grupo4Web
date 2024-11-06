@@ -16,6 +16,28 @@ import {
   Lixo,
   Add,
   AreaAdd,
+} from "../../pages/Editor/Editor.style";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import lixo from "../../assets/trash.png";
+import React, { useState, useEffect } from "react";
+import lixo from "../../assets/trash.png";
+import {
+  Container,
+  InputNum,
+  InputText,
+  Form,
+  Card,
+  Label,
+  AreaTexto,
+  AreaNum,
+  Area,
+  Botao,
+  AreaBotao,
+  BotaoAtualizar,
+  Lixo,
+  Add,
+  AreaAdd,
   Adicionar,
   BtnLixo,
 } from "./Editor.style";
@@ -27,6 +49,8 @@ import axios from "axios";
 export default function Editor() {
   const [cards, setCards] = useState([]);
   const [idCat, setCat] = useState(0);
+
+
   const [newProduct, setNewProduct] = useState({
     sabor: "",
     descricao: "",
@@ -38,6 +62,7 @@ export default function Editor() {
 
   // Pegar os dados existentes da API, funcionando
   useEffect(() => {
+
     axios
       .get("http://localhost:8080/produtos")
       .then((response) => {
@@ -87,25 +112,27 @@ export default function Editor() {
   // Função apagar, funcionando
   function apagar(id) {
     axios
-      .delete(`http://localhost:8080/produtos/${id}`)
+      .put(`http://localhost:8080/produtos/${card.id}`, atProduct)
       .then(() => {
-        console.log("Apagado com sucesso");
-        setCards(cards.filter((card) => card.id != id));
+        console.log("Sucesso ao atualizar");
       })
       .catch(() => console.log("Problemas na hora de apagar"));
   }
-
+  
   let tempProduct = {
-    sabor: null,
-    descricao: null,
-    precoP: null,
-    precoM: null,
-    precoG: null,
-  };
+      sabor: null,
+      descricao: null,
+      precoP: null,
+      precoM: null,
+      precoG: null,
+  }
+
 
   function atualizar(card) {
-    console.log(tempProduct.sabor);
 
+    console.log(tempProduct.sabor);
+    
+    
     let atProduct = {
       sabor: card.sabor,
       descricao: card.descricao,
@@ -115,34 +142,91 @@ export default function Editor() {
       idCategoria: card.idCategoria,
     };
 
-    if (tempProduct.sabor != null) {
-      atProduct.sabor = tempProduct.sabor;
+    if (tempProduct.sabor != null ) {
+      atProduct.sabor = tempProduct.sabor
     }
-    if (tempProduct.descricao != null) {
-      atProduct.descricao = tempProduct.descricao;
+    if(tempProduct.descricao != null ){
+      atProduct.descricao = tempProduct.descricao
     }
-    if (tempProduct.precoP != null) {
-      atProduct.precoP = tempProduct.precoP;
+    if(tempProduct.precoP != null ){
+      atProduct.precoP = tempProduct.precoP
     }
-    if (tempProduct.precoM != null) {
-      atProduct.precoM = tempProduct.precoM;
+    if(tempProduct.precoM != null ){
+      atProduct.precoM = tempProduct.precoM
     }
-    if (tempProduct.precoG != null) {
-      atProduct.precoG = tempProduct.precoG;
+    if(tempProduct.precoG != null ){
+      atProduct.precoG = tempProduct.precoG
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/produtos");
+        if (response.data) {
+          setCards(response.data);
+        } else {
+          console.log("Nenhum produto encontrado");
+        }
+      } catch (error) {
+        console.log("Erro ao carregar os dados", error);
+      }
+    };
+    fetchData();
+
+
+  const addCard = async () => {
+    if (newProduct.sabor && newProduct.descricao && newProduct.precoP && newProduct.precoM && newProduct.precoG) {
+      try {
+        const response = await axios.post("http://localhost:8080/produtos", newProduct);
+        if (response.data) {
+          setCards([...cards, response.data]);
+          resetNewProduct();
+        } else {
+          console.log("Erro ao adicionar produto");
+        }
+      } catch (error) {
+        console.log("Erro ao adicionar produto", error);
+      }
+    } else {
+      console.log("Preencha todos os campos");
+    }
+  };
+
+  const resetNewProduct = () => {
+    setNewProduct({
+      sabor: "",
+      descricao: "",
+      precoP: 0,
+      precoM: 0,
+      precoG: 0,
+      idCategoria: 1,
+    });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const apagar = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/produtos/${id}`);
+      setCards(cards.filter((card) => card.id !== id));
+      console.log("Apagado com sucesso");
+    } catch (error) {
+      console.log("Erro ao apagar produto", error);
     }
 
-    axios
-      .put(`http://localhost:8080/produtos/${card.id}`, atProduct)
-      .then(() => {
-        console.log("Sucesso ao atualizar");
-      })
-      .catch(() => {
-        console.log("Erro na requisão ao atualizar");
-      });
+    console.log(atProduct.sabor);
+
+    axios.put(`http://localhost:8080/produtos/${card.id}`, atProduct)
+    .then(() => { console.log('fooi');
+    })
+    .catch(()=>{console.log('nao foi');
+    })
   }
 
   //Codigo ta confuso mas funcional eu acho
   return (
+
     <>
       <Header />
       <Container>
@@ -169,11 +253,12 @@ export default function Editor() {
                     value={card.idCategoria}
                     onChange={() => value = value}
                   />
+                  <InputText defaultValue={card.idCategoria} value={card.idCategoria}/>
 
                   {/* Esses botoes tao inuteis, nem sei se vai dar tempo de dar uma função pra eles, no formulario de envio so consigo
                   colocar os valores que ja foram definidos para o campo, se não da erro, por exemplo, se eu escrever "batata" no 
                   categoria da ruim */}
-                  <AreaBotao>
+                
                     <Botao
                       onClick={(e) => {
                         e.preventDefault();
@@ -209,6 +294,16 @@ export default function Editor() {
                     >
                       Atualizar
                     </BotaoAtualizar>
+                  <InputText defaultValue={card.sabor} />
+                  <Label>Descrição: </Label>
+                  <InputText defaultValue={card.descricao} />
+                  <Label>Categoria: </Label>
+                  <InputText defaultValue={card.idCategoria} />
+                  <AreaBotao>
+                    <Link to={`/update/${card.id}`}>
+                      <BotaoAtualizar>Atualizar</BotaoAtualizar>
+                    </Link>
+                    <Lixo src={lixo} alt="Apagar" onClick={() => apagar(card.id)} />
                   </AreaBotao>
                 </AreaTexto>
                 <AreaNum>
@@ -242,10 +337,16 @@ export default function Editor() {
                       ))
                     }
                   />
+                  <InputNum type="number" defaultValue={parseFloat(card.precoG).toFixed(2)} onBlur={(e) => (tempProduct.precoG = parseFloat(e.target.value).toFixed(2))}/>
 
                   <BtnLixo onClick={() => apagar(card.id)}>
                     <Lixo src={lixo} alt="Apagar" />
                   </BtnLixo>
+                  <InputNum defaultValue={card.precoP} />
+                  <Label>ValorM: </Label>
+                  <InputNum defaultValue={card.precoM} />
+                  <Label>ValorG: </Label>
+                  <InputNum defaultValue={card.precoG} />
                 </AreaNum>
               </Area>
             </Form>
@@ -253,6 +354,8 @@ export default function Editor() {
         ))}
 
         {/* Daq pra baixo é o formulario para adicionar produto, so precida de um formatação pra ficar bonito */}
+        {/* Daq pra baixo é o formulario para adicionar produto, so precida de um formatação pra ficar bonito */}
+
         <AreaAdd>
           <Add>Adicionar novo produto</Add>
           <Form>
@@ -305,9 +408,22 @@ export default function Editor() {
         </AreaAdd>
         <Adicionar onClick={addCard}>Adicionar Novo Produto</Adicionar>
       </Container>
+                <InputText name="sabor" value={newProduct.sabor} onChange={handleInputChange} />
+                <Label>Descrição: </Label>
+                <InputText name="descricao" value={newProduct.descricao} onChange={handleInputChange} />
+                <Label>Categoria: </Label>
+                <InputText name="idCategoria" value={newProduct.idCategoria} onChange={handleInputChange} />
+          
+              <AreaNum>
+                <Label>ValorP: </Label>
+                <InputNum name="precoP" value={newProduct.precoP} onChange={handleInputChange} />
+                <Label>ValorM: </Label>
+                <InputNum name="precoM" value={newProduct.precoM} onChange={handleInputChange} />
+                <Label>ValorG: </Label>
+                <InputNum name="precoG" value={newProduct.precoG} onChange={handleInputChange} />
+              </AreaNum>
+      
       <Footer />
     </>
   );
 }
-
-//Falta só o update, formatação do formulario de produto novo
