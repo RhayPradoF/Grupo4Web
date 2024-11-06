@@ -24,6 +24,7 @@ import {
   Form,
 } from "./Login.style";
 import { useNavigate } from "react-router-dom";
+import BotaoFlutuante from "../../components/BotaoFlutuante";
 
 export default function Login() {
   const [senhaVisivel, setSenhaVisivel] = useState(false);
@@ -106,7 +107,7 @@ export default function Login() {
           </Form>
         </AreaForm>
       </Container>
-
+      <BotaoFlutuante/>
       <Footer />
     </>
   );
