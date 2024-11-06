@@ -24,6 +24,7 @@ import {
 } from "./Home.style";
 import bannerImage from "../../assets/pizzaBanner.png";
 import axios from "axios";
+import BotaoFlutuante from "../../components/BotaoFlutuante";
 
 export default function Home() {
   const [produtos, setProdutos] = useState([]);
@@ -81,6 +82,7 @@ export default function Home() {
           </Categoria>
         ))}
       </AreaCardapio>
+      <BotaoFlutuante/>
       <Footer />
     </>
   );
