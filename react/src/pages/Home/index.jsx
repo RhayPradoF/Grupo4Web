@@ -34,10 +34,10 @@ export default function Home() {
     axios
       .get("http://localhost:8080/categorias")
       .then((response) => {
-        console.log("foi");
+        console.log("Get feito com sucesso");
         setCategorias(response.data);
       })
-      .catch(() => console.log("Não foi"));
+      .catch(() => console.log("Falha no get"));
   }, []);
 
   return (

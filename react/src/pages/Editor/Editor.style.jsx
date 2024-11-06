@@ -29,7 +29,7 @@ export const Label = styled.label`
 export const AreaTexto = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 60%;
 `;
 
 export const AreaNum = styled.div`
@@ -45,12 +45,18 @@ export const InputText = styled.input`
   padding: 5px 10px;
   margin-bottom: 10px;
   font-size: 18px;
+  &::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+  }
 `;
 
 export const InputNum = styled.input`
   padding: 5px 10px;
   margin-bottom: 10px;
   font-size: 18px;
+  &::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+  }
 `;
 
 export const Botao = styled.button`
@@ -61,6 +67,12 @@ export const Botao = styled.button`
   font-size: 20px;
   color: white;
   font-family: "Raleway";
+  cursor: pointer;
+
+  &:hover{
+    background-color: #fa0303;
+  }
+
 `;
 
 export const AreaBotao = styled.div`
@@ -80,6 +92,12 @@ export const BotaoAtualizar = styled.button`
   color: white;
   font-family: "Raleway";
   font-weight: 800;
+  cursor: pointer;
+
+  &:hover{
+    background-color: #3a3a3a;
+  }
+
 `;
 
 export const Lixo = styled.img`
@@ -97,5 +115,21 @@ export const Add = styled.a`
 
 export const AreaAdd = styled.div`
   margin-top: 50px;
+  display: none;
 `;
+
+export const Adicionar = styled.button`
+  font-size: 20px;
+  color: #fff;
+  background: none;
+  border: none;
+  margin-top: 30px;
+  cursor: pointer;
+`
+export const BtnLixo = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
+
 

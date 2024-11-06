@@ -22,6 +22,8 @@ import {
   ChaveIcone,
   Form,
 } from "./Login.style";
+
+
 import { useNavigate } from "react-router-dom";
 import BotaoFlutuante from "../../components/BotaoFlutuante";
 
@@ -36,26 +38,21 @@ export default function Login() {
     event.preventDefault();
 
     try {
-      const response = await axios.get(`http://localhost:8080/usuario/${email}`);
+      const response = await axios.get(
+        `http://localhost:8080/usuario/${email}`
+      );
       console.log("Resposta da API:", response.data);
-        
+
       if (response.data.senha === senha && response.data.nome === "Admin") {
         navigate("/editor");
-
-      }
-      else if(response.data.senha === senha) {
+      } else if (response.data.senha === senha) {
         navigate("/");
-
-      }
-      else {
+      } else {
         alert("Senha incorreta, digite de novo!!");
-        
-
       }
     } catch (error) {
       error("Erro ao buscar o e-mail:", error);
     }
-
   };
 
   return (
