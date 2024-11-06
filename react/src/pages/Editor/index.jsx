@@ -8,6 +8,7 @@ import setaCima from '../../assets/seta-para-cima.png';
 import lixo from '../../assets/trash.png';
 import CirCheio from '../../assets/circulo.png';
 import CirVazio from '../../assets/contorno-de-forma-de-circulo.png';
+import BotaoFlutuante from '../../components/BotaoFlutuante';
 
 export default function Editor() {
   const [blocos, setBlocos] = useState([]);
@@ -18,7 +19,7 @@ export default function Editor() {
 
   const fetchBlocos = async () => {
     try {
-      const response = await axios.get("https://67293f886d5fa4901b6c9a91.mockapi.io/posts");
+      const response = await axios.get("https://localhost:8080");
       setBlocos(response.data);
     } catch (error) {
       console.error("Erro ao buscar blocos:", error);
@@ -27,7 +28,7 @@ export default function Editor() {
 
   const addBloco = async (data) => {
     try {
-      const response = await axios.post("https://67293f886d5fa4901b6c9a91.mockapi.io/posts", data);
+      const response = await axios.post("https://localhost:8080", data);
       setBlocos([...blocos, response.data]);
       console.log("Produto adicionado com sucesso");
     } catch (error) {
@@ -42,7 +43,7 @@ export default function Editor() {
     setBlocos(updatedBlocos);
     
     try {
-      await axios.put(`https://67293f886d5fa4901b6c9a91.mockapi.io/posts/${id}`, { [field]: value });
+      await axios.put(`https://localhost:8080/${id}`, { [field]: value });
     } catch (error) {
       console.error("Erro ao atualizar bloco:", error);
     }
@@ -50,7 +51,7 @@ export default function Editor() {
 
   const deleteBloco = async (id) => {
     try {
-      await axios.delete(`https://67293f886d5fa4901b6c9a91.mockapi.io/posts/${id}`);
+      await axios.delete(`https://localhost:8080/${id}`);
       setBlocos(blocos.filter(bloco => bloco.id !== id));
       console.log("Produto deletado com sucesso");
     } catch (error) {
@@ -167,6 +168,7 @@ export default function Editor() {
           + Adicionar mais produtos
         </button>
       </div>
+      <BotaoFlutuante/>
       <Footer />
     </div>
   );
