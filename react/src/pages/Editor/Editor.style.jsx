@@ -68,9 +68,11 @@ export const Botao = styled.button`
   color: white;
   font-family: "Raleway";
   cursor: pointer;
+
   &:hover{
     background-color: #fa0303;
   }
+
 `;
 
 export const AreaBotao = styled.div`
@@ -91,9 +93,11 @@ export const BotaoAtualizar = styled.button`
   font-family: "Raleway";
   font-weight: 800;
   cursor: pointer;
+
   &:hover{
     background-color: #3a3a3a;
   }
+
 `;
 
 export const Lixo = styled.img`
@@ -126,4 +130,6 @@ export const BtnLixo = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-`
+`;
+
+
