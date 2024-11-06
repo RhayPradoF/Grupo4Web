@@ -39,4 +39,9 @@ export const ItemLink = styled(Link)`
     &:hover{
         color: #FFA600;
     }
-`
+`;
+
+export const UserName = styled.span`
+  color: #333; // ou a cor que você preferir
+  font-size: 16px; // ajuste conforme necessário
+`;

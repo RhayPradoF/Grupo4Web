@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from "react";
-import lixo from "../../assets/trash.png";
+import axios from "axios";
+import { Link } from "react-router-dom";
 import {
   Container,
   InputNum,
@@ -17,27 +17,12 @@ import {
   Lixo,
   Add,
   AreaAdd,
-} from "./Editor.style";
+} from "../../pages/Editor/Editor.style";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import axios from "axios";
-import { Link } from "react-router-dom";
-
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import styles from './Editor.module.css';
-import setaBaixo from '../../assets/seta-para-baixo.png';
-import setaCima from '../../assets/seta-para-cima.png';
-import lixo from '../../assets/trash.png';
-import CirCheio from '../../assets/circulo.png';
-import CirVazio from '../../assets/contorno-de-forma-de-circulo.png';
-import BotaoFlutuante from '../../components/BotaoFlutuante';
+import lixo from "../../assets/trash.png";
 
 
-
-//Os id presente ao longo do codigo são dos blocos 
 export default function Editor() {
   const [cards, setCards] = useState([]);
   const [newProduct, setNewProduct] = useState({
@@ -49,69 +34,70 @@ export default function Editor() {
     idCategoria: 1, // Default "Salgado"
   });
 
-  // Pegar os dados existentes da API, funcionando
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/produtos")
-      .then((response) => {
-        setCards(response.data); // Preencher os cards com os dados da API, funcionando
-      })
-      .catch(() => console.log("Problemas ao carregar os dados"));
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/produtos");
+        if (response.data) {
+          setCards(response.data);
+        } else {
+          console.log("Nenhum produto encontrado");
+        }
+      } catch (error) {
+        console.log("Erro ao carregar os dados", error);
+      }
+    };
+    fetchData();
   }, []);
 
-  // Função para adicionar um novo card na API, funcionando
-  const addCard = () => {
-    const newCardData = {
-      sabor: newProduct.sabor,
-      descricao: newProduct.descricao,
-      precoP: newProduct.precoP,
-      precoM: newProduct.precoM,
-      precoG: newProduct.precoG,
-      idCategoria: newProduct.idCategoria,
-    };
-
-    // Adicionar novo produto na API, funcionando
-    axios
-      .post("http://localhost:8080/produtos", newCardData)
-      .then((response) => {
-        console.log("Produto adicionado com sucesso");
-        setCards([...cards, response.data]); // Atualiza o estado com o novo card retornado pela API
-        setNewProduct({
-          sabor: "",
-          descricao: "",
-          precoP: 0,
-          precoM: 0,
-          precoG: 0,
-          idCategoria: 1, // Reset ao valor padrão de categoria
-        });
-      })
-      .catch(() => console.log("Erro ao adicionar produto"));
+  const addCard = async () => {
+    if (newProduct.sabor && newProduct.descricao && newProduct.precoP && newProduct.precoM && newProduct.precoG) {
+      try {
+        const response = await axios.post("http://localhost:8080/produtos", newProduct);
+        if (response.data) {
+          setCards([...cards, response.data]);
+          resetNewProduct();
+        } else {
+          console.log("Erro ao adicionar produto");
+        }
+      } catch (error) {
+        console.log("Erro ao adicionar produto", error);
+      }
+    } else {
+      console.log("Preencha todos os campos");
+    }
   };
 
-  // Função para lidar com mudanças nos inputs do formulário, essa função peguei por fora, não entendi mto bem oq faz
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const resetNewProduct = () => {
     setNewProduct({
-      ...newProduct,
-      [name]: value,
+      sabor: "",
+      descricao: "",
+      precoP: 0,
+      precoM: 0,
+      precoG: 0,
+      idCategoria: 1,
     });
   };
 
-  // Função apagar, funcionando
-  function apagar(id) {
-    axios
-      .delete(`http://localhost:8080/produtos/${id}`)
-      .then(() => {
-        console.log("Apagado com sucesso");
-        setCards(cards.filter((card) => card.id != id));
-      })
-      .catch(() => console.log("Problemas na hora de apagar"));
-  }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct((prev) => ({ ...prev, [name]: value }));
+  };
 
-  //Codigo ta confuso mas funcional eu acho
+  const apagar = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/produtos/${id}`);
+      setCards(cards.filter((card) => card.id !== id));
+      console.log("Apagado com sucesso");
+    } catch (error) {
+      console.log("Erro ao apagar produto", error);
+    }
+  };
+
   return (
-    <>
+    <div >
       <Header />
+      <h1>Editor</h1>
       <Container>
         {cards.map((card) => (
           <Card key={card.id}>
@@ -124,19 +110,11 @@ export default function Editor() {
                   <InputText defaultValue={card.descricao} />
                   <Label>Categoria: </Label>
                   <InputText defaultValue={card.idCategoria} />
-
-                  {/* Esses botoes tao inuteis, nem sei se vai dar tempo de dar uma função pra eles, no formulario de envio so consigo
-                  colocar os valores que ja foram definidos para o campo, se não da erro, por exemplo, se eu escrever "batata" no 
-                  categoria da ruim */}
                   <AreaBotao>
-                    <Botao>Salgado</Botao>
-                    <Botao>Doce</Botao>
-                    <Botao>Bebida</Botao>
-
-                    {/* Nao tava conseguindo fazer um update nessa paginda, então pensei em criar outra q so puxa o Card selecionado por ID e altera por la */}
                     <Link to={`/update/${card.id}`}>
                       <BotaoAtualizar>Atualizar</BotaoAtualizar>
                     </Link>
+                    <Lixo src={lixo} alt="Apagar" onClick={() => apagar(card.id)} />
                   </AreaBotao>
                 </AreaTexto>
                 <AreaNum>
@@ -146,77 +124,39 @@ export default function Editor() {
                   <InputNum defaultValue={card.precoM} />
                   <Label>ValorG: </Label>
                   <InputNum defaultValue={card.precoG} />
-                  <a>
-                    <Lixo src={lixo} alt="Apagar" />
-                    <button onClick={() => apagar(card.id)}>apagar</button>
-                  </a>
                 </AreaNum>
               </Area>
             </Form>
           </Card>
         ))}
 
-
-        {/* Daq pra baixo é o formulario para adicionar produto, so precida de um formatação pra ficar bonito */}
         <AreaAdd>
           <Add>Adicionar novo produto</Add>
           <Form>
             <Area>
               <AreaTexto>
                 <Label>Sabor: </Label>
-                <InputText
-                  name="sabor"
-                  value={newProduct.sabor}
-                  onChange={handleInputChange}
-                />
+                <InputText name="sabor" value={newProduct.sabor} onChange={handleInputChange} />
                 <Label>Descrição: </Label>
-                <InputText
-                  name="descricao"
-                  value={newProduct.descricao}
-                  onChange={handleInputChange}
-                />
+                <InputText name="descricao" value={newProduct.descricao} onChange={handleInputChange} />
                 <Label>Categoria: </Label>
-                <InputText
-                  name="idCategoria"
-                  value={newProduct.idCategoria}
-                  onChange={handleInputChange}
-                />
+                <InputText name="idCategoria" value={newProduct.idCategoria} onChange={handleInputChange} />
               </AreaTexto>
               <AreaNum>
                 <Label>ValorP: </Label>
-                <InputNum
-                  name="precoP"
-                  value={newProduct.precoP}
-                  onChange={handleInputChange}
-                />
+                <InputNum name="precoP" value={newProduct.precoP} onChange={handleInputChange} />
                 <Label>ValorM: </Label>
-                <InputNum
-                  name="precoM"
-                  value={newProduct.precoM}
-                  onChange={handleInputChange}
-                />
+                <InputNum name="precoM" value={newProduct.precoM} onChange={handleInputChange} />
                 <Label>ValorG: </Label>
-                <InputNum
-                  name="precoG"
-                  value={newProduct.precoG}
-                  onChange={handleInputChange}
-                />
+                <InputNum name="precoG" value={newProduct.precoG} onChange={handleInputChange} />
               </AreaNum>
             </Area>
           </Form>
-          <button onClick={addCard}>Novo</button>
+          <Botao onClick={addCard}>Novo</Botao>
         </AreaAdd>
       </Container>
 
-        <button className={styles.addBloco} onClick={() => addBloco({ nome: '', categoria: '', valorP: '', valorM: '', ingredientes: '', valorG: '' })}>
-          + Adicionar mais produtos
-        </button>
-      </div>
-      <BotaoFlutuante/>
-
       <Footer />
-    </>
+    </div>
   );
 }
-
-//Falta só o update, formatação do formulario de produto novo
