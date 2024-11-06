@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import lixo from "../../assets/trash.png";
 import {
@@ -21,6 +22,19 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import styles from './Editor.module.css';
+import setaBaixo from '../../assets/seta-para-baixo.png';
+import setaCima from '../../assets/seta-para-cima.png';
+import lixo from '../../assets/trash.png';
+import CirCheio from '../../assets/circulo.png';
+import CirVazio from '../../assets/contorno-de-forma-de-circulo.png';
+import BotaoFlutuante from '../../components/BotaoFlutuante';
+
 
 
 //Os id presente ao longo do codigo são dos blocos 
@@ -142,6 +156,7 @@ export default function Editor() {
           </Card>
         ))}
 
+
         {/* Daq pra baixo é o formulario para adicionar produto, so precida de um formatação pra ficar bonito */}
         <AreaAdd>
           <Add>Adicionar novo produto</Add>
@@ -192,6 +207,13 @@ export default function Editor() {
           <button onClick={addCard}>Novo</button>
         </AreaAdd>
       </Container>
+
+        <button className={styles.addBloco} onClick={() => addBloco({ nome: '', categoria: '', valorP: '', valorM: '', ingredientes: '', valorG: '' })}>
+          + Adicionar mais produtos
+        </button>
+      </div>
+      <BotaoFlutuante/>
+
       <Footer />
     </>
   );

@@ -19,6 +19,7 @@ import {
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import BotaoFlutuante from '../../components/BotaoFlutuante';
 
 export default function Cadastro() {
 
@@ -117,7 +118,7 @@ export default function Cadastro() {
                     {erro && <ErrorMessage>{erro}</ErrorMessage>}
                 </Form>
             </AreaForm>
-
+            <BotaoFlutuante/>
             <Footer />
         </Container>
     );
