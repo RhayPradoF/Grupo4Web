@@ -61,6 +61,7 @@ export const Botao = styled.button`
   font-size: 20px;
   color: white;
   font-family: "Raleway";
+  cursor: pointer;
 `;
 
 export const AreaBotao = styled.div`
@@ -80,6 +81,7 @@ export const BotaoAtualizar = styled.button`
   color: white;
   font-family: "Raleway";
   font-weight: 800;
+  cursor: pointer;
 `;
 
 export const Lixo = styled.img`
@@ -97,5 +99,19 @@ export const Add = styled.a`
 
 export const AreaAdd = styled.div`
   margin-top: 50px;
+  display: none;
 `;
 
+export const Adicionar = styled.button`
+  font-size: 20px;
+  color: #fff;
+  background: none;
+  border: none;
+  margin-top: 30px;
+  cursor: pointer;
+`
+export const BtnLixo = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+`
